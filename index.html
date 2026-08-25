@@ -3,45 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Danh sách 40 Video</title>
+  <title>Danh sách 40 Ảnh</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: system-ui, -apple-system, sans-serif;
       background: #0f0f0f;
       color: #fff;
-      padding: 20px;
+      padding: 24px;
     }
     h1 {
       text-align: center;
-      margin-bottom: 30px;
-      font-size: 2rem;
+      margin-bottom: 32px;
+      font-size: 2.2rem;
     }
-    .video-grid {
+    .image-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 20px;
       max-width: 1400px;
       margin: 0 auto;
     }
-    .video-card {
-      background: #1a1a1a;
-      border-radius: 12px;
+    .image-card {
+      background: #1c1c1c;
+      border-radius: 14px;
       overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
+      transition: all 0.25s ease;
       text-decoration: none;
       color: inherit;
+      display: block;
     }
-    .video-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    .image-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
     }
     .thumbnail {
       width: 100%;
-      aspect-ratio: 16/9;
+      aspect-ratio: 1/1;
       object-fit: cover;
       background: #333;
+      display: block;
     }
     .info {
       padding: 14px;
@@ -62,39 +63,72 @@
   </style>
 </head>
 <body>
-  <h1>Danh sách 40 Video</h1>
-  <div class="video-grid" id="videoGrid"></div>
+  <h1>Danh sách 40 Ảnh</h1>
+  <div class="image-grid" id="imageGrid"></div>
 
   <script>
-    // Dữ liệu 40 video mẫu
-    const videos = Array.from({ length: 40 }, (_, i) => {
-      const id = i + 1;
-      return {
-        id,
-        title: `Video số ${id} - Hướng dẫn / Giải trí / Demo`,
-        description: `Đây là mô tả chi tiết của video số ${id}. Nội dung hấp dẫn, dễ hiểu và hữu ích.`,
-        thumbnail: `https://picsum.photos/seed/video${id}/640/360`,
-        // Dùng video mẫu công khai (có thể thay bằng YouTube embed hoặc file mp4 thật)
-        videoUrl: `https://www.w3schools.com/html/mov_bbb.mp4`,
-        views: Math.floor(Math.random() * 500000) + 1000,
-        duration: `${Math.floor(Math.random() * 20) + 3}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`
-      };
+    // 40 ảnh khác nhau (dùng picsum.photos với seed riêng + tiêu đề/mô tả riêng)
+    const images = [
+      { id: 1,  title: "Hoàng hôn trên biển Đà Nẵng", description: "Ánh nắng chiều vàng óng phản chiếu trên mặt biển Mỹ Khê, tạo nên khung cảnh lãng mạn.", category: "Thiên nhiên", size: "1920x1080" },
+      { id: 2,  title: "Phố cổ Hội An về đêm", description: "Những chiếc đèn lồng lung linh soi bóng trên sông Hoài, mang đậm nét văn hóa Việt.", category: "Du lịch", size: "1600x1200" },
+      { id: 3,  title: "Ruộng bậc thang Sapa", description: "Những thửa ruộng bậc thang xanh mướt trải dài dưới sương mù buổi sớm.", category: "Thiên nhiên", size: "2000x1333" },
+      { id: 4,  title: "Cà phê sáng Sài Gòn", description: "Tách cà phê sữa đá đậm đà bên góc phố yên tĩnh buổi sáng.", category: "Ẩm thực", size: "1500x1500" },
+      { id: 5,  title: "Chùa Một Cột Hà Nội", description: "Công trình kiến trúc độc đáo nổi tiếng của thủ đô nghìn năm văn hiến.", category: "Kiến trúc", size: "1800x1200" },
+      { id: 6,  title: "Hồ Gươm ban mai", description: "Sương sớm mỏng manh bao phủ mặt hồ Hoàn Kiếm thanh bình.", category: "Thành phố", size: "1920x1080" },
+      { id: 7,  title: "Biển Nha Trang trong xanh", description: "Nước biển trong vắt và cát trắng mịn tạo nên thiên đường nghỉ dưỡng.", category: "Du lịch", size: "2000x1125" },
+      { id: 8,  title: "Chợ nổi Cái Răng", description: "Không khí nhộn nhịp của chợ nổi miền Tây với ghe thuyền đầy trái cây.", category: "Văn hóa", size: "1600x1067" },
+      { id: 9,  title: "Núi Fansipan", description: "Đỉnh núi cao nhất Đông Dương ẩn hiện trong mây mù hùng vĩ.", category: "Thiên nhiên", size: "1920x1280" },
+      { id: 10, title: "Phở bò Hà Nội", description: "Tô phở nóng hổi với nước dùng trong veo và thịt bò tái chín.", category: "Ẩm thực", size: "1400x1400" },
+      { id: 11, title: "Cầu Vàng Đà Nẵng", description: "Cây cầu vàng được nâng bởi đôi bàn tay khổng lồ giữa núi rừng Bà Nà.", category: "Kiến trúc", size: "2000x1125" },
+      { id: 12, title: "Vịnh Hạ Long", description: "Hàng nghìn hòn đảo đá vôi nhô lên từ mặt biển xanh ngọc.", category: "Du lịch", size: "1920x1080" },
+      { id: 13, title: "Áo dài truyền thống", description: "Tà áo dài thướt tha trong gió, biểu tượng vẻ đẹp người Việt.", category: "Văn hóa", size: "1200x1800" },
+      { id: 14, title: "Làng gốm Bát Tràng", description: "Những sản phẩm gốm sứ tinh xảo được tạo ra bởi bàn tay nghệ nhân.", category: "Thủ công", size: "1600x1200" },
+      { id: 15, title: "Đèo Hải Vân", description: "Con đèo quanh co với view biển và núi non tuyệt đẹp.", category: "Thiên nhiên", size: "1920x1080" },
+      { id: 16, title: "Bún chả Hà Nội", description: "Món ăn dân dã với thịt nướng thơm lừng và nước chấm chua ngọt.", category: "Ẩm thực", size: "1500x1000" },
+      { id: 17, title: "Chùa Thiên Mụ Huế", description: "Ngôi chùa cổ kính bên dòng sông Hương thơ mộng.", category: "Kiến trúc", size: "1800x1200" },
+      { id: 18, title: "Cát Bà hùng vĩ", description: "Vườn quốc gia Cát Bà với hệ sinh thái rừng và biển phong phú.", category: "Thiên nhiên", size: "2000x1333" },
+      { id: 19, title: "Bánh mì Việt Nam", description: "Ổ bánh mì giòn tan với nhân đầy ắp và nước sốt đặc trưng.", category: "Ẩm thực", size: "1400x1400" },
+      { id: 20, title: "Phố đi bộ Nguyễn Huệ", description: "Không gian sôi động của trung tâm Sài Gòn về đêm.", category: "Thành phố", size: "1920x1080" },
+      { id: 21, title: "Thác Bản Giốc", description: "Thác nước hùng vĩ nằm trên biên giới Việt - Trung.", category: "Thiên nhiên", size: "2000x1125" },
+      { id: 22, title: "Làng cổ Đường Lâm", description: "Ngôi làng cổ với nhà cửa đá ong và cây đa, giếng nước cổ kính.", category: "Văn hóa", size: "1600x1067" },
+      { id: 23, title: "Cơm tấm Sài Gòn", description: "Dĩa cơm tấm sườn bì chả đầy đủ topping hấp dẫn.", category: "Ẩm thực", size: "1500x1000" },
+      { id: 24, title: "Mũi Né Phan Thiết", description: "Đồi cát vàng và biển xanh tạo nên cảnh quan độc đáo.", category: "Du lịch", size: "1920x1080" },
+      { id: 25, title: "Chùa Bái Đính", description: "Khu chùa lớn với kiến trúc đồ sộ và không gian thanh tịnh.", category: "Kiến trúc", size: "1800x1200" },
+      { id: 26, title: "Vườn quốc gia Phong Nha", description: "Hệ thống hang động kỳ vĩ được UNESCO công nhận.", category: "Thiên nhiên", size: "2000x1333" },
+      { id: 27, title: "Trà đá vỉa hè", description: "Ly trà đá mát lạnh bên góc phố Hà Nội xưa.", category: "Ẩm thực", size: "1200x1600" },
+      { id: 28, title: "Cầu Rồng Đà Nẵng", description: "Cây cầu hình rồng phun lửa và nước vào cuối tuần.", category: "Kiến trúc", size: "1920x1080" },
+      { id: 29, title: "Đảo Phú Quốc", description: "Bãi biển cát trắng và nước trong xanh của đảo ngọc.", category: "Du lịch", size: "2000x1125" },
+      { id: 30, title: "Lễ hội đua ghe", description: "Không khí sôi động của lễ hội truyền thống miền Tây.", category: "Văn hóa", size: "1600x1067" },
+      { id: 31, title: "Núi Ngũ Hành Sơn", description: "Ngũ hành sơn với các hang động và chùa chiền linh thiêng.", category: "Thiên nhiên", size: "1800x1200" },
+      { id: 32, title: "Bánh xèo miền Tây", description: "Chiếc bánh xèo vàng giòn nhân tôm thịt đầy ắp.", category: "Ẩm thực", size: "1400x1400" },
+      { id: 33, title: "Phố cổ Hà Nội", description: "Những con phố nhỏ với mái ngói rêu phong và cuộc sống nhộn nhịp.", category: "Thành phố", size: "1600x1200" },
+      { id: 34, title: "Vịnh Lan Hạ", description: "Vịnh biển đẹp với làn nước trong và những hòn đảo nhỏ.", category: "Du lịch", size: "1920x1080" },
+      { id: 35, title: "Chùa Keo Thái Bình", description: "Ngôi chùa cổ với kiến trúc gỗ độc đáo và sân khấu chèo.", category: "Kiến trúc", size: "1800x1200" },
+      { id: 36, title: "Đèo Ô Quy Hồ", description: "Con đèo đẹp nhất Tây Bắc với view núi non trùng điệp.", category: "Thiên nhiên", size: "2000x1333" },
+      { id: 37, title: "Gỏi cuốn tôm thịt", description: "Món ăn thanh mát với bánh tráng mỏng và nhân tươi ngon.", category: "Ẩm thực", size: "1500x1000" },
+      { id: 38, title: "Bảo tàng Mỹ thuật", description: "Không gian trưng bày các tác phẩm nghệ thuật Việt Nam.", category: "Văn hóa", size: "1600x1067" },
+      { id: 39, title: "Biển Quy Nhơn", description: "Bãi biển hoang sơ với đá đen và cát trắng tuyệt đẹp.", category: "Du lịch", size: "1920x1080" },
+      { id: 40, title: "Hoàng thành Thăng Long", description: "Di tích lịch sử quan trọng của thủ đô Hà Nội.", category: "Kiến trúc", size: "1800x1200" }
+    ];
+
+    // Gán URL ảnh duy nhất cho mỗi item
+    images.forEach(img => {
+      img.url = `https://picsum.photos/seed/anh${img.id}/800/800`;
+      img.fullUrl = `https://picsum.photos/seed/anh${img.id}/1600/1600`;
     });
 
-    // Lưu dữ liệu vào localStorage để trang detail lấy được
-    localStorage.setItem('videos', JSON.stringify(videos));
+    localStorage.setItem('images', JSON.stringify(images));
 
-    // Render danh sách
-    const grid = document.getElementById('videoGrid');
-    videos.forEach(video => {
+    const grid = document.getElementById('imageGrid');
+    images.forEach(img => {
       const card = document.createElement('a');
-      card.href = `detail.html?id=${video.id}`;
-      card.className = 'video-card';
+      card.href = `detail.html?id=${img.id}`;
+      card.className = 'image-card';
       card.innerHTML = `
-        <img class="thumbnail" src="${video.thumbnail}" alt="${video.title}" loading="lazy">
+        <img class="thumbnail" src="${img.url}" alt="${img.title}" loading="lazy">
         <div class="info">
-          <div class="title">${video.title}</div>
-          <div class="meta">${video.views.toLocaleString()} lượt xem • ${video.duration}</div>
+          <div class="title">${img.title}</div>
+          <div class="meta">${img.category} • ${img.size}</div>
         </div>
       `;
       grid.appendChild(card);
